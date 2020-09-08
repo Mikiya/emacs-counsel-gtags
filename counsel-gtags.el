@@ -103,7 +103,8 @@ This variable does not have any effect unless
   '((file      . "-P")
     (pattern   . "-g")
     (reference . "-r")
-    (symbol    . "-s")))
+    (symbol    . "-s")
+    (tags      . "-f")))
 
 (defvar counsel-gtags--last-update-time 0)
 (defvar counsel-gtags--context nil)
@@ -532,6 +533,12 @@ Useful for jumping from a location when using global commands (like with
 	 (plist-put
 	  (counsel-gtags--find-file-ivy-parameters filename)
 	  :caller 'counsel-gtags-find-file-name)))
+
+;;;###autoload
+(defun counsel-gtags-find-tags-infile ()
+  "List all tags in the current file."
+  (interactive)
+  (counsel-gtags--select-file 'tags (buffer-file-name(current-buffer))))
 
 ;;;###autoload
 (defun counsel-gtags-go-backward ()
