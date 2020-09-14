@@ -30,7 +30,7 @@
 ;;; Code:
 
 ;; See https://emacs.stackexchange.com/a/19458/10785
-(eval-when-compile (require 'cl))
+(require 'cl-lib)
 (require 'f)
 (require 'dash)
 (require 's)
@@ -422,6 +422,21 @@ tested with a call to `shell-command-to-string' and `split-string' like
     (should
      (string-suffix-p "rg --color=never" (counsel-gtags--get-grep-command)))))
 
+(ert-deftest tags-infile ()
+  (counsel-gtags--with-mock-project
+   (save-window-excursion
+     (with-current-buffer (find-file main-file-path)
+       (let ((type 'tags)
+	     (query main-file-path)
+	     (query-command
+	      (counsel-gtags--build-command-to-collect-candidates query '("--result=ctags")))
+	     (collected-results
+	      (s-split "\n" (shell-command-to-string query-command) t))))
+       (should
+        (equal collected-results
+	       '("the_first_func"
+		 "the_second_func"
+		 "the_third_func")))))))
 
 
 (provide 'unit-tests)
