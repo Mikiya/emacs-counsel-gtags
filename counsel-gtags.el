@@ -538,7 +538,9 @@ Useful for jumping from a location when using global commands (like with
 (defun counsel-gtags-find-tags-infile ()
   "List all tags in the current file."
   (interactive)
-  (counsel-gtags--select-file 'tags (buffer-file-name(current-buffer))))
+  (if-let* ((b-filename (buffer-file-name)))
+      (counsel-gtags--select-file 'tags b-filename)
+    (error "No filename for buffer %s" (buffer-name))))
 
 ;;;###autoload
 (defun counsel-gtags-go-backward ()
